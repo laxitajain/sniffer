@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sniffer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js for empirical experiment graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <polyline points="9 12 11 14 15 10"></polyline>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h2>Sniffer</h2>
+                    <span class="badge">Empirical Study</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="playground">
+                    <span class="icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                    </span> Live Playground
+                </button>
+                <button class="nav-item" data-tab="leaderboard">
+                    <span class="icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+                    </span> Detector Leaderboard
+                </button>
+                <button class="nav-item" data-tab="experiments">
+                    <span class="icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    </span> Research Experiments
+                </button>
+                <button class="nav-item" data-tab="taxonomy">
+                    <span class="icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                    </span> Failure Taxonomy
+                </button>
+                <button class="nav-item" data-tab="literature">
+                    <span class="icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    </span> Core Literature (30 Papers)
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="dot online"></span> API Server Active
+                </div>
+                <span class="version">v1.0.0 • EMNLP/ACL Benchmark</span>
+            </div>
+        </aside>
+
+        <!-- Main Content View -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1 id="page-title">Live Hallucination Playground</h1>
+                    <p id="page-subtitle">Test and decompose LLM responses across 4 detection paradigms in real-time</p>
+                </div>
+                <div class="header-actions">
+                    <button id="btn-run-benchmark" class="btn btn-secondary">
+                        <span class="icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                        </span> Re-Run Benchmark Suite
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB 1: PLAYGROUND -->
+            <section id="tab-playground" class="tab-page active">
+                <div class="playground-layout">
+                    <!-- Left: Input Form -->
+                    <div class="input-panel card">
+                        <h3>Input Generation Context</h3>
+                        <div class="form-group">
+                            <label for="input-prompt">Prompt / Question</label>
+                            <input type="text" id="input-prompt" placeholder="e.g. Who founded Acme Corporation and when?" value="Who founded Acme Corporation and when?">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-context">Grounding Context / Source Document</label>
+                            <textarea id="input-context" rows="4" placeholder="Source context text...">Acme Corporation was founded in Berlin in 1998 by Dr. Elizabeth Vance.</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-response">Generated Response to Check</label>
+                            <textarea id="input-response" rows="4" placeholder="LLM generated answer...">Acme Corporation was founded in Berlin in 2005 by Dr. Elizabeth Vance. She previously studied physics.</textarea>
+                        </div>
+
+                        <div class="preset-buttons">
+                            <span class="preset-label">Load Benchmark Sample:</span>
+                            <button class="btn-chip" onclick="loadSample('contradiction')">Contradiction</button>
+                            <button class="btn-chip" onclick="loadSample('unsupported')">Unsupported Info</button>
+                            <button class="btn-chip" onclick="loadSample('factual')">Factual Baseline</button>
+                            <button class="btn-chip" onclick="loadSample('correct_unsupported')">Cao et al. (Factual-Unsupported)</button>
+                        </div>
+
+                        <button id="btn-detect" class="btn btn-primary btn-block">
+                            <span class="icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </span> Detect Hallucinations
+                        </button>
+                    </div>
+
+                    <!-- Right: Analysis Results -->
+                    <div class="results-panel">
+                        <!-- Atomic Claims Breakdown -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>FActScore Atomic Claim Decomposition</h3>
+                                <span class="badge badge-info" id="claims-count-badge">0 Claims</span>
+                            </div>
+                            <div id="atomic-claims-list" class="claims-grid">
+                                <p class="placeholder-text">Click "Detect Hallucinations" to extract and verify atomic claims.</p>
+                            </div>
+                        </div>
+
+                        <!-- 4 Detectors Comparison Grid -->
+                        <div class="card">
+                            <h3>Detector Comparison Grid</h3>
+                            <div id="detectors-grid" class="detectors-grid">
+                                <p class="placeholder-text">Detection results will appear here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: LEADERBOARD -->
+            <section id="tab-leaderboard" class="tab-page">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Hallucination Detection Leaderboard</h2>
+                            <p class="subtitle">Evaluated on HaluEval, RAGTruth, SummaC & TruthfulQA benchmark samples</p>
+                        </div>
+                        <div class="stat-pill">
+                            <span id="lb-total-samples">8 Benchmark Samples</span>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table" id="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Detector Strategy</th>
+                                    <th>Accuracy</th>
+                                    <th>Precision</th>
+                                    <th>Recall</th>
+                                    <th>F1 Score</th>
+                                    <th>AUROC</th>
+                                    <th>Avg Latency</th>
+                                    <th>Cost / 1K Queries</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-tbody">
+                                <tr><td colspan="8" class="text-center">Loading benchmark evaluation data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: EXPERIMENTS -->
+            <section id="tab-experiments" class="tab-page">
+                <div class="experiments-grid">
+                    <!-- Chart 1: Pareto Frontier Cost vs Accuracy -->
+                    <div class="card chart-card">
+                        <h3>Experiment 1: Cost vs. Detection Quality (Pareto Frontier)</h3>
+                        <p class="subtitle">Does spending 100x more compute on SelfCheckGPT / LLM-as-a-Judge actually improve detection?</p>
+                        <div class="chart-container">
+                            <canvas id="paretoChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Grounding Context Ablation (RAG vs No RAG) -->
+                    <div class="card chart-card">
+                        <h3>Experiment 3: Context Quality & RAG Ablation</h3>
+                        <p class="subtitle">F1 Score performance across No Context, Partial Context, and Complete RAG Grounding</p>
+                        <div class="chart-container">
+                            <canvas id="ragAblationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: TAXONOMY -->
+            <section id="tab-taxonomy" class="tab-page">
+                <div class="card">
+                    <h2>Experiment 2: Fine-Grained Category Failure Matrix</h2>
+                    <p class="subtitle">Accuracy breakdown across 6 distinct hallucination failure types</p>
+
+                    <div class="table-container">
+                        <table class="data-table" id="category-matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>Hallucination Category</th>
+                                    <th>Similarity Baseline</th>
+                                    <th>NLI Detector</th>
+                                    <th>SelfCheckGPT</th>
+                                    <th>Meta-Ensemble</th>
+                                </tr>
+                            </thead>
+                            <tbody id="category-matrix-tbody">
+                                <tr><td colspan="5" class="text-center">Loading taxonomy failure matrix...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: LITERATURE -->
+            <section id="tab-literature" class="tab-page">
+                <div class="card">
+                    <h2>Core Literature Map (30 Papers)</h2>
+                    <p class="subtitle">Structured progression from factual consistency metrics → benchmarks → zero-resource detection → modern evaluations</p>
+
+                    <div id="literature-grid" class="literature-grid">
+                        <!-- Literature cards populated dynamically -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
